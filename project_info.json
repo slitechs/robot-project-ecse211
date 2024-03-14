@@ -1,0 +1,5 @@
+{
+  "name": "Final Project",
+  "group": 0,
+  "entrypoint": "project/start.py"
+}
