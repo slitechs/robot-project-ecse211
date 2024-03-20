@@ -26,7 +26,7 @@ def activate_ultrasonic():
         if us_data is not None: # If None is given, then data collection failed that time
             print(us_data)
             # check if robot is too close (within 20 cm)
-            if us_data <= 20:
+            if us_data <= 20 and us_data != 0: # 0 was found to be a common value for noise, so need to disregard it (until filter is applied)
                 # stop moving
                 motorRight.set_power(0)
                 motorLeft.set_power(0)
@@ -51,6 +51,19 @@ def activate_ultrasonic():
         reset_brick() # Turn off everything on the brick's hardware, and reset it
         exit()
 
+# applies filter of the specified length on input vector
+def median_filter(input_vec, length):
+    vector_length = len(input_vec)
+    for i in range(vector_length - length):
+        # sort numbers in increasing order
+        sorted_vector = input_vec[i:i+length].sort()
+        print("debugging median filter, sorted: "+sorted_vector)
+        med_value = sorted_vector[length//2]
+        if input_vec[i]>med_value:
+            
+
+            print("unfinished")
+        
 
 if __name__ == "__main__":
     activate_ultrasonic()

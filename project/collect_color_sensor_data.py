@@ -35,8 +35,8 @@ def collect_color_sensor_data():
         # continuously sample color sensor until 10 data points are collected
         # while data_points_collected < 10: # while True to continuously sample until an exception is detected (Ctrl-C, program exits)
         while True:
-            color_data_r = colorRight.get_rgb() # list of float values
-            color_data_l = colorLeft.get_rgb() # list of float values
+            color_data_r = colorRight.get_red() # list of float values
+            color_data_l = colorLeft.get_red() # list of float values
     
             if color_data_r is not None: # if None then data collection failed so ignore
                     #print("R: "+str(color_data_r))
@@ -47,7 +47,7 @@ def collect_color_sensor_data():
     except BaseException:  # capture all exceptions including KeyboardInterrupt (Ctrl-C)
         pass
     finally:
-        print("Done collecting Color Sensor RGB samples")
+        print("Done collecting Color Sensor red samples")
         output_file.close()
         reset_brick() # Turn off everything on the brick's hardware, and reset it
         exit()
