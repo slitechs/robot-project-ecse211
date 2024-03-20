@@ -14,10 +14,10 @@ from time import sleep
 #COLOR_SENSOR_DATA_FILE_L = "../data_analysis/color_sensor_left.csv"
 COLOR_SENSOR_DATA_FILE = "../data_analysis/color_sensor.csv"
 
-# complete this based on your hardware setup
+# complete this based on hardware setup
 colorRight = EV3ColorSensor(4)
 colorLeft = EV3ColorSensor(3)
-#TOUCH_SENSOR = TouchSensor(1)
+
 
 DELAY_SEC = 0.01  # seconds of delay between color sensor samples
 

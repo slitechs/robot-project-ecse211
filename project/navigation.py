@@ -7,14 +7,17 @@ Test navigation & color sensor (stop when red is detected)
 from utils.brick import BP, Motor, wait_ready_sensors, EV3ColorSensor, TouchSensor
 from utils.brick import reset_brick, EV3UltrasonicSensor
 from time import sleep
+from ultrasonic_sensor import activate_ultrasonic
+from tunnel_testing import inner_tunnel
 
 print("Program start.\nWaiting for sensors to turn on...")
 
+# this is where the I/O devices are accessed
 motorRight = Motor("C")
 motorLeft = Motor("D")
 colorRight = EV3ColorSensor(4)
 colorLeft = EV3ColorSensor(3)
-touch_sensor = TouchSensor(1)
+us_sensor_side = EV3UltrasonicSensor(1)
 US_SENSOR = EV3UltrasonicSensor(2)
 
 
@@ -25,11 +28,18 @@ wait_ready_sensors(True)
 print("Done waiting")
 
 def navigation():
+    global forward
     try:
         print("Start navigation")
         turned = False
+        #forward = True
+        #motorRight.set_power(-60)
+        #motorLeft.set_power(-60)
         
         while True:
+            activate_ultrasonic() # in tunnel is a boolean
+            sleep(0.01)
+            #inner_tunnel()
             #if touch_sensor.is_pressed():
                 
                 #motorRight.set_power(-70)
@@ -55,33 +65,31 @@ def navigation():
                     #motorRight.set_power(0)
                     #motorLeft.set_power(0)
 
-            color_data_r = colorRight.get_red() # list of float values # can be get_rgb or get_red
-            color_data_l = colorLeft.get_red() # list of float values # can be get_rgb or get_red
+            color_data_r = colorRight.get_red() # list of float values
+            color_data_l = colorLeft.get_red() # list of float values
             
-            # red way
             if color_data_l is not None and color_data_r is not None: # if None then data collection failed so ignore
-                    print("R: "+str(color_data_r) + " L: "+str(color_data_l))
+                    #print("R: "+str(color_data_r) + " L: "+str(color_data_l))
                     
                     if (color_data_r + 20 < color_data_l):
                         # if right side sees black line
                         # lessen right motor power
-                        motorRight.set_power(-40)
-                        motorLeft.set_power(-90)
+                        motorRight.set_power(-20)
+                        motorLeft.set_power(-70)
                         print("right")
                         sleep(0.01)
                     elif (color_data_l + 20< color_data_r):
                         # if left side sees black line
                         # lessen left motor power
-                        motorRight.set_power(-90)
-                        motorLeft.set_power(-40)
+                        motorRight.set_power(-70)
+                        motorLeft.set_power(-20)
                         print("left")
                         sleep(0.01)
                     else:
-                        motorRight.set_power(-80)
-                        motorLeft.set_power(-80)
+                        motorRight.set_power(-40)
+                        motorLeft.set_power(-40)
                         sleep(0.01)
                     
-                    # rgb way
                     """
                     if (color_data_l[0] > color_data_l[1]+20 and color_data_l[0] > color_data_l[2]+20):
                         # check if red, if yes then stop and do a 180 turn
