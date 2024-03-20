@@ -22,21 +22,33 @@ print("Done waiting")
 '''
 Code for navigation inside the tunnel 
 '''
-def inner_tunnel(): 
-    if us_sensor_side.get_cm()<= 8: 
-        motorRight.set_power(-60)
-        motorLeft.set_power(-20)
-        print("right")
-        sleep(0.01)
-    elif us_sensor_side.get_cm()>=12: 
-        motorRight.set_power(-60)
-        motorLeft.set_power(-20)
-        print("right")
-        sleep(0.01)
-    else: 
-        motorRight.set_power(-50)
-        motorLeft.set_power(-50)
-        sleep(0.01)
+def inner_tunnel():
+    try:
+        #while True:
+            if us_sensor_side.get_cm()<= 6: 
+                motorRight.set_power(-60)
+                motorLeft.set_power(-20)
+                print("right")
+                sleep(0.01)
+            elif us_sensor_side.get_cm()>=10: 
+                motorRight.set_power(-20)
+                motorLeft.set_power(-60)
+                print("left")
+                sleep(0.01)
+            else: 
+                motorRight.set_power(-50)
+                motorLeft.set_power(-50)
+                sleep(0.01)
+            
+    except BaseException:
+        motorRight.set_power(0)
+        motorLeft.set_power(0)
+        
+    finally:
+        print("Done")
+        reset_brick() # Turn off everything on the brick's hardware, and reset it
+        exit()
+            
 
 '''
 Code to detect if tunnel is blocked 
@@ -46,31 +58,36 @@ def tunnel():
         print("Start navigation")
         turned = False
 
-        while True: 
+        while True:
             #Check if the furthest tunnel is blocked
             if us_sensor_side.get_cm() <= 10: 
                 #Go back to the second tunnel 
-                motorRight.set_power(80)
-                motorLeft.set_power(80)
+                motorRight.set_power(0)
+                motorLeft.set_power(0)
                 sleep(1)
                 #Turn
-                motorRight.set_power(-80)
-                motorLeft.set_power(80)
+                motorRight.set_power(-0)
+                motorLeft.set_power(0)
                 sleep(1)
                 inner_tunnel()
 
             else: 
                 #Turn 
-                motorRight.set_power(-80)
-                motorLeft.set_power(80)
+                motorRight.set_power(-0)
+                motorLeft.set_power(0)
                 sleep(1)
                 inner_tunnel()
 
     except BaseException:
         motorRight.set_power(0)
         motorLeft.set_power(0)
+        
 
     finally:
         print("Done tunneling")
         reset_brick() # Turn off everything on the brick's hardware, and reset it
         exit()
+
+if __name__ == "__main__":
+    inner_tunnel()
+    
