@@ -2,6 +2,7 @@
 
 """
 Start: March 25, 2024
+In Progress: March 26, 2024
 """
 
 from utils.brick import BP, Motor, wait_ready_sensors, EV3ColorSensor, TouchSensor
@@ -42,7 +43,7 @@ def navigation():
             color_data_r = colorRight.get_red() # list of float values
             color_data_l = colorLeft.get_red() # list of float values
             
-            if color_data_l is not None and color_data_r is not None: # if None then data collection failed so ignore
+            if color_data_l is not None and color_data_r is not None and forward == True: # if None then data collection failed so ignore
                     # * For testing purposes
                     #print("R: "+str(color_data_r) + " L: "+str(color_data_l))
                         
@@ -51,18 +52,19 @@ def navigation():
                         # lessen right motor power
                         motorRight.set_power(-20)
                         motorLeft.set_power(-70)
-                        print("right")
+                        print("color-right")
                         sleep(0.01)
                     elif (color_data_l + 20< color_data_r):
                         # if left side sees black line
                         # lessen left motor power
                         motorRight.set_power(-70)
                         motorLeft.set_power(-20)
-                        print("left")
+                        print("color-left")
                         sleep(0.01)
                     else:
                         motorRight.set_power(-40)
                         motorLeft.set_power(-40)
+                        print("color-both")
                         sleep(0.01)
                     
                     
@@ -87,7 +89,7 @@ def activate_ultrasonic():
             # TODO: print this for debugging once forward global variable works
             #print("Forward: "+str(forward))
             # check if robot is too close in front (within 20 cm)
-            if forward == True and us_data <= 15 and us_data != 0: # 0 was found to be a common value for noise, so need to disregard it (until filter is applied)
+            if forward == True and us_data <= 10 and us_data != 0: # 0 was found to be a common value for noise, so need to disregard it (until filter is applied)
                 print("forwards and tunnel detected")
                 # stop moving
                 motorRight.set_power(0)
@@ -96,18 +98,19 @@ def activate_ultrasonic():
                 # turn left (side ultrasonic is on right side)
                 motorRight.set_power(-60)
                 motorLeft.set_power(60)
-                sleep(0.5) # edit this value based on robot design to do a 90 degree turn
+                sleep(0.4) # edit this value based on robot design to do a 90 degree turn
                 # move forwards slowly
                 motorRight.set_power(-30)
                 motorLeft.set_power(-30)
                 forward = False
                 print("forward = false now")
-                sleep(1)
-                return # get out of check_us_sensors
+                sleep(0.5) # edit this duration to determine how long to move forwards for when checking the first (top) tunnel
+                # ? TODO: check where this returns to (not sure if this is needed...this might be messing it up)
+                #return # get out of check_us_sensors
             
             if forward == False and us_side_data>50: # open tunnel detected
                 print("nothing ahead detected, turn and go through tunnel")
-                #sleep(0.4) # buffer to make it go a bit farther before turning
+                sleep(0.5) # buffer to make it go a bit farther before turning
                 # stop
                 motorLeft.set_power(0)
                 motorRight.set_power(0)
@@ -115,15 +118,16 @@ def activate_ultrasonic():
                 # turn right
                 motorRight.set_power(60)
                 motorLeft.set_power(-60)
-                sleep(0.5) # edit this value based on robot design to do a 90 degree turn
+                sleep(0.4) # edit this value based on robot design to do a 90 degree turn
                 # move forwards slowly
                 motorRight.set_power(-30)
                 motorLeft.set_power(-30)
                 forward = True
                 print("forward = true now")
                 sleep(1)
+                # ? TODO: figure out whether this return is needed (previous testing shows that it seems to work)
                 return
-            elif forward == False and us_side_data < 15: # blocked tunnel detected
+            elif forward == False and us_side_data < 20: # blocked tunnel detected
                 print("blocked tunnel detected")
                 # stop
                 motorLeft.set_power(0)
@@ -132,7 +136,31 @@ def activate_ultrasonic():
                  # move backwards slowly
                 motorRight.set_power(30)
                 motorLeft.set_power(30)
-                sleep(1.5)
+                
+                # open tunnel is the one on the right
+                while True:
+                    us_data = US_SENSOR.get_value()  # Float value in centimeters 0, capped to 255 cm
+                    us_side_data = us_sensor_side.get_value()
+
+                    if forward == False and us_side_data>50: # open tunnel detected
+                        print("nothing ahead detected, turn and go through tunnel")
+                        sleep(0.3) # buffer to make it go a bit farther before turning
+                        # stop
+                        motorLeft.set_power(0)
+                        motorRight.set_power(0)
+                        sleep(1)
+                        # turn right
+                        motorRight.set_power(60)
+                        motorLeft.set_power(-60)
+                        sleep(0.4) # edit this value based on robot design to do a 90 degree turn
+                        # move forwards slowly
+                        motorRight.set_power(-30)
+                        motorLeft.set_power(-30)
+                        forward = True
+                        print("forward = true now")
+                        sleep(1)
+                        # ? TODO: figure out whether this return is needed (previous testing shows that it seems to work)
+                        return
             
         #check_us_sensors(forward)
         
