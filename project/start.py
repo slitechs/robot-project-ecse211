@@ -14,7 +14,7 @@ from navigation import navigation
 print("Start of program start.py.\nWaiting for sensors to turn on...")
 
 # sensors and their ports
-touch_sensor = TouchSensor(1)
+us_sensor_side = EV3UltrasonicSensor(1)
 US_SENSOR = EV3UltrasonicSensor(2)
 colorLeft = EV3ColorSensor(3)
 colorRight = EV3ColorSensor(4)
