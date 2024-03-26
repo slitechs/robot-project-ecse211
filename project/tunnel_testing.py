@@ -24,21 +24,30 @@ Code for navigation inside the tunnel
 '''
 def inner_tunnel():
     try:
-        #while True:
-            if us_sensor_side.get_cm()<= 6: 
+        print("Start inner tunnel navigation")
+        while us_sensor_side.get_cm()<20: # edit this value to figure out when sensor is in tunnel
+            if us_sensor_side.get_cm()<= 6: # edit this value to adjust tolerance
                 motorRight.set_power(-60)
                 motorLeft.set_power(-20)
-                print("right")
+                print("adjust to move left")
                 sleep(0.01)
-            elif us_sensor_side.get_cm()>=10: 
+            elif us_sensor_side.get_cm()>=9: # edit this value to adjust tolerance
                 motorRight.set_power(-20)
                 motorLeft.set_power(-60)
-                print("left")
+                print("adjust to move right")
                 sleep(0.01)
             else: 
-                motorRight.set_power(-50)
-                motorLeft.set_power(-50)
+                print("go straight")
+                motorRight.set_power(-40)
+                motorLeft.set_power(-40)
                 sleep(0.01)
+        
+        sleep(0.01)
+        # out of the tunnel
+        print("out of tunnel: go straight")
+        motorRight.set_power(-40)
+        motorLeft.set_power(-40)
+        sleep(1) # edit this value to make sure most of the robot escapes the tunnel before proceeding
             
     except BaseException:
         motorRight.set_power(0)

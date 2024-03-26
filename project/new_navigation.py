@@ -109,6 +109,7 @@ def activate_ultrasonic():
                 #return # get out of check_us_sensors
             
             if forward == False and us_side_data>50: # open tunnel detected
+                # open tunnel is the one on the left
                 print("nothing ahead detected, turn and go through tunnel")
                 sleep(0.5) # buffer to make it go a bit farther before turning
                 # stop
@@ -124,7 +125,9 @@ def activate_ultrasonic():
                 motorLeft.set_power(-30)
                 forward = True
                 print("forward = true now")
-                sleep(1)
+                sleep(1) # change this to determine how long to wait until entire side ultrasonic sensor enters tunnel
+                # ! TODO: untested
+                inner_tunnel() # activate tunnelling
                 # ? TODO: figure out whether this return is needed (previous testing shows that it seems to work)
                 return
             elif forward == False and us_side_data < 20: # blocked tunnel detected
@@ -144,7 +147,7 @@ def activate_ultrasonic():
 
                     if forward == False and us_side_data>50: # open tunnel detected
                         print("nothing ahead detected, turn and go through tunnel")
-                        sleep(0.3) # buffer to make it go a bit farther before turning
+                        sleep(0.33) # buffer to make it go a bit farther before turning
                         # stop
                         motorLeft.set_power(0)
                         motorRight.set_power(0)
@@ -158,7 +161,9 @@ def activate_ultrasonic():
                         motorLeft.set_power(-30)
                         forward = True
                         print("forward = true now")
-                        sleep(1)
+                        sleep(1) # change this to determine how long to wait until entire side ultrasonic sensor enters tunnel
+                        # ! TODO: untested
+                        inner_tunnel() # activate tunnelling
                         # ? TODO: figure out whether this return is needed (previous testing shows that it seems to work)
                         return
             
