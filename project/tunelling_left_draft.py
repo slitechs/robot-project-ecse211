@@ -15,6 +15,9 @@ us_sensor_front = EV3UltrasonicSensor(2)
 
 DELAY_SEC = 0.01
 
+'''
+In progress: consistent left tunnel out behaviour
+'''
 
 wait_ready_sensors(True)
 print("Done waiting")
@@ -27,13 +30,13 @@ def inner_tunnel():
         print("Start inner tunnel navigation")
         start_time = time()
         print("Time starts here")
-        while us_sensor_side.get_cm()<20: # edit this value to figure out when sensor is in tunnel
+        while us_sensor_side.get_cm()<23: # edit this value to figure out when sensor is in tunnel
             if us_sensor_side.get_cm()<= 6: # edit this value to adjust tolerance
                 motorRight.set_power(-60)
                 motorLeft.set_power(-20)
                 print("adjust to move left")
                 sleep(0.01)
-            elif us_sensor_side.get_cm()>=9: # edit this value to adjust tolerance
+            elif us_sensor_side.get_cm()>=8: # edit this value to adjust tolerance
                 motorRight.set_power(-20)
                 motorLeft.set_power(-60)
                 print("adjust to move right")
@@ -52,10 +55,17 @@ def inner_tunnel():
         sleep(0.01)
         # out of the tunnel
         print("out of tunnel: go slighly left")
+        if (us_sensor_side.get_cm() > 20): # if it passes through left tunnel
+            motorRight.set_power(-45)
+            motorLeft.set_power(-40)
+            sleep(0.01)
+        while (us_sensor_front.get_cm() > 25):
+            print("moving to correct position")
+        # make a sharp turn
         motorRight.set_power(-60) # 60 works when going through right tunnel
-        motorLeft.set_power(-20) # 20 works when going through left tunnel
-        sleep(1) # edit this value to make sure most of the robot escapes the tunnel before proceeding
-            
+        motorLeft.set_power(60) # 20 works when going through left tunnel
+        sleep(0.3) # edit this value to make sure most of the robot escapes the tunnel before proceeding
+        print("done hard-coded portion")
     except BaseException:
         motorRight.set_power(0)
         motorLeft.set_power(0)
