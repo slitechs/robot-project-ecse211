@@ -46,15 +46,58 @@ def inner_tunnel():
             end_time = time()
             elapsed_time = end_time-start_time
             print(elapsed_time)
-            if (elapsed_time > 5):
+            if (elapsed_time > 4.7):
                 break # get out of while loop
         
         sleep(0.01)
-        # out of the tunnel
-        print("out of tunnel: go slighly left")
-        motorRight.set_power(-60) # 60 works when going through right tunnel
-        motorLeft.set_power(-20) # 20 works when going through left tunnel
-        sleep(1) # edit this value to make sure most of the robot escapes the tunnel before proceeding
+        # out of the tunnel 
+        print("out of tunnel: go straight then turn left at line")
+        motorRight.set_power(-30) # (other way: 60 works when going through right tunnel)
+        motorLeft.set_power(-30) # (20 works when going through right tunnel)
+        sleep(0.01) # edit this value to make sure most of the robot escapes the tunnel before proceeding
+        while us_sensor_front.get_cm()>35: # check distance from wall
+            pass # keep moving forward
+        print("distance from wall to line reached")
+        # stop
+        motorRight.set_power(0)
+        motorLeft.set_power(0)
+        sleep(0.5)
+        # turn left
+        motorLeft.set_power(50)
+        motorRight.set_power(-50)
+        sleep(0.3) # adjust this to make a 90 degree turn
+        # move straight
+        motorLeft.set_power(-40)
+        motorRight.set_power(-40)
+        sleep(1.7)
+        # turn left
+        motorLeft.set_power(50)
+        motorRight.set_power(-50)
+        sleep(0.25) # adjust this to make a 90 degree turn
+        # move straight
+        motorLeft.set_power(-40)
+        motorRight.set_power(-40)
+        sleep(0.01)
+        # wall following
+        '''
+        side_value = us_sensor_side.get_cm()
+        if side_value > 20:
+            print("> 20")
+            while us_sensor_side.get_cm() > 15:
+                motorLeft.set_power(-40)
+                motorRight.set_power(-30)
+                sleep(0.01)
+        elif side_value < 15:
+            print("< 15")
+            while us_sensor_side.get_cm() < 15:
+                motorLeft.set_power(-30)
+                motorRight.set_power(-40)
+                sleep(0.01)
+        '''
+        # move straight
+        motorLeft.set_power(-40)
+        motorRight.set_power(-40)
+        sleep(0.01)        
             
     except BaseException:
         motorRight.set_power(0)

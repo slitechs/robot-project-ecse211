@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+'''
+* UNUSED * (actual ultrasonic function is in new_navigation)
+'''
 
 from utils import sound
 from utils.brick import TouchSensor, EV3UltrasonicSensor, wait_ready_sensors, reset_brick
@@ -21,20 +24,22 @@ wait_ready_sensors(True) # Input True to see what the robot is trying to initial
 print("Done waiting.")
 
 forward = True
+tunnel1 = False
 
-# TODO: add median filter to filter out noise (255 and 0 values)
+
 def activate_ultrasonic():
     global forward
+    global tunnel1
     try:
         us_data = US_SENSOR.get_value()  # Float value in centimeters 0, capped to 255 cm
         us_side_data = us_sensor_side.get_value()
-        #def check_us_sensors(forward):
+
         if us_data is not None and us_side_data is not None: # If None is given, then data collection failed that time
             print("Front: "+str(us_data))
             print("Side: "+str(us_side_data))
             #print("Forward: "+str(forward))
-            # check if robot is too close in front (within 20 cm)
-            if forward == True and us_data <= 15 and us_data != 0: # 0 was found to be a common value for noise, so need to disregard it (until filter is applied)
+            # check if robot is too close in front (within 15 cm)
+            if forward == True and us_data <= 15 and us_data != 0 and tunnel1 == False: # 0 was found to be a common value for noise, so need to disregard it (until filter is applied)
                 print("forwards and tunnel detected")
                 # stop moving
                 motorRight.set_power(0)
@@ -52,24 +57,8 @@ def activate_ultrasonic():
                 sleep(1)
                 
                 return # get out of check_us_sensors
-            """
-            elif forward == False and us_data <= 5 and us_data != 0: # lower the threshold when moving side to side
-                print("moving sideways, very close object detected in forward sensor")
-                motorLeft.set_power(0)
-                motorRight.set_power(0)
-                sleep(0.01)
-                # turn right
-                motorRight.set_power(60)
-                motorLeft.set_power(-60)
-                sleep(0.35)
-                # move forwards slowly
-                motorRight.set_power(-40)
-                motorLeft.set_power(-40)
-                forward = True
-                print("forward = true now")
-            """
             
-            if forward == False and us_side_data>50: # open tunnel detected
+            if forward == False and us_side_data>50 and tunnel1 == False: # open tunnel detected
                 print("nothing ahead detected, turn and go through tunnel")
                 #sleep(0.4) # buffer to make it go a bit farther before turning
                 # stop
@@ -87,7 +76,7 @@ def activate_ultrasonic():
                 print("forward = true now")
                 sleep(1)
                 return
-            elif forward == False and us_side_data < 15: # blocked tunnel detected
+            elif forward == False and us_side_data < 15 and tunnel1 == False: # blocked tunnel detected
                 print("blocked tunnel detected")
                 # stop
                 motorLeft.set_power(0)
@@ -98,7 +87,6 @@ def activate_ultrasonic():
                 motorLeft.set_power(30)
                 sleep(1.5)
             
-        #check_us_sensors(forward)
         
         sleep(DELAY_SEC)
     except BaseException as e:  # capture all exceptions including KeyboardInterrupt (Ctrl-C)
