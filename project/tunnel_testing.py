@@ -1,6 +1,7 @@
 from utils.brick import BP, Motor, wait_ready_sensors, EV3ColorSensor, TouchSensor
 from utils.brick import reset_brick, EV3UltrasonicSensor
 from time import sleep, time
+import traceback
 
 print("Program start.\nWaiting for sensors to turn on...")
 
@@ -27,8 +28,8 @@ def inner_tunnel():
         print("Start inner tunnel navigation")
         start_time = time()
         print("Time starts here")
-        while us_sensor_side.get_cm()<20: # edit this value to figure out when sensor is in tunnel
-            if us_sensor_side.get_cm()<= 6: # edit this value to adjust tolerance
+        while us_sensor_side.get_cm() is None or us_sensor_side.get_cm()<15: # edit this value to figure out when sensor is in tunnel
+            if us_sensor_side.get_cm()<= 7: # edit this value to adjust tolerance
                 motorRight.set_power(-60)
                 motorLeft.set_power(-20)
                 print("adjust to move left")
@@ -46,39 +47,19 @@ def inner_tunnel():
             end_time = time()
             elapsed_time = end_time-start_time
             print(elapsed_time)
-            if (elapsed_time > 4.7):
+            if (elapsed_time > 5.15):
                 break # get out of while loop
-        
         sleep(0.01)
-        # out of the tunnel 
-        print("out of tunnel: go straight then turn left at line")
-        motorRight.set_power(-30) # (other way: 60 works when going through right tunnel)
-        motorLeft.set_power(-30) # (20 works when going through right tunnel)
-        sleep(0.01) # edit this value to make sure most of the robot escapes the tunnel before proceeding
-        while us_sensor_front.get_cm()>35: # check distance from wall
-            pass # keep moving forward
-        print("distance from wall to line reached")
-        # stop
+        # out of the tunnel
+        print("out of tunnel: go straight-ish then turn left at line")
+        # used for left tunnel: make it go a bit more forward before trying to wall follow
+        print("go straight")
+        motorRight.set_power(-40)
+        motorLeft.set_power(-40)
+        sleep(0.5)
         motorRight.set_power(0)
         motorLeft.set_power(0)
-        sleep(0.5)
-        # turn left
-        motorLeft.set_power(50)
-        motorRight.set_power(-50)
-        sleep(0.3) # adjust this to make a 90 degree turn
-        # move straight
-        motorLeft.set_power(-40)
-        motorRight.set_power(-40)
-        sleep(1.7)
-        # turn left
-        motorLeft.set_power(50)
-        motorRight.set_power(-50)
-        sleep(0.25) # adjust this to make a 90 degree turn
-        # move straight
-        motorLeft.set_power(-40)
-        motorRight.set_power(-40)
-        sleep(0.01)
-        # wall following
+        sleep(1)
         '''
         side_value = us_sensor_side.get_cm()
         if side_value > 20:
@@ -93,15 +74,12 @@ def inner_tunnel():
                 motorLeft.set_power(-30)
                 motorRight.set_power(-40)
                 sleep(0.01)
-        '''
-        # move straight
-        motorLeft.set_power(-40)
-        motorRight.set_power(-40)
-        sleep(0.01)        
+        '''     
             
     except BaseException:
         motorRight.set_power(0)
         motorLeft.set_power(0)
+        print(traceback.format_exc())
         reset_brick() # Turn off everything on the brick's hardware, and reset it
         exit()
         
