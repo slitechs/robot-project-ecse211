@@ -2,36 +2,34 @@ from utils.brick import Motor, TouchSensor, wait_ready_sensors, BP
 import time
 
 #motor = Motor("A")
-catapult = Motor("B")
 door = Motor("A")
-TOUCH_SENSOR = TouchSensor(1)
-wait_ready_sensors()
-print("sensors ready")
 
-initial_position = catapult.get_position()
-print(initial_position)
+#wait_ready_sensors()
+#print("sensors ready")
+
+initial_position = door.get_position() #get initial position
+print("Initial Position: " + str(initial_position))
+
+i = 1 #Counter (1 to 10)
 
 while True:
     try:
-        for i in range(8):
-            time.sleep(1)
-            catapult.set_position_relative(125) #125 for 3rd,80 for 2nd, 55 for 1st
-            time.sleep(1.0)
-            catapult.set_position(initial_position)
-            time.sleep(4)
-            
         time.sleep(1)
-        catapult.set_position_relative(80) #115 for 3rd,65 for 2nd, 50 for 1st
-        time.sleep(1.0)
-        catapult.set_position(initial_position)
+        door.set_position_relative(-45) #115 for 3rd,65 for 2nd, 50 for 1st
+        print("Open: " + str(i))
+        time.sleep(0.3) #0.35
+        door.set_position(initial_position)
+        print("Close: " + str(i))
         time.sleep(2)
+        i +=1
         
-        time.sleep(1)
-        catapult.set_position_relative(55) #115 for 3rd,65 for 2nd, 50 for 1st
-        time.sleep(1.0)
-        catapult.set_position(initial_position)
-        time.sleep(2)
-        break
+        #door.set_power(-35)
+        #time.sleep(0.2)
+        #door.set_power(35)
+        #time.sleep(0.21)
+        #door.set_power(0)
+        #time.sleep(4)
+        
         #motor.set_power(40)
         #if TOUCH_SENSOR.is_pressed():
             #print("Touch sensor is pressed")
@@ -49,7 +47,7 @@ while True:
             
     except BaseException:  # capture all exceptions including KeyboardInterrupt (Ctrl-C)
         #motor.set_power(0)
-        catapult.set_position(initial_position)
+        door.set_position(initial_position)
         BP.reset_all()
         exit()
         
