@@ -22,7 +22,6 @@ while True:
         print("Close: " + str(i))
         time.sleep(2)
         i +=1
-       
             
     except BaseException:  # capture all exceptions including KeyboardInterrupt (Ctrl-C)
         #motor.set_power(0)
