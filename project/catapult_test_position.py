@@ -32,23 +32,8 @@ while True:
         catapult.set_position(initial_position)
         time.sleep(2)
         break
-        #motor.set_power(40)
-        #if TOUCH_SENSOR.is_pressed():
-            #print("Touch sensor is pressed")
-           
-    
-            
-            #Consistently gets into the second one
-            #TODO: Increase length of the lever to increase distance
-            #With increased length of lever, angle > 150 hits the table
-            #catapult.set_position_relative(158)
-        
-            #catapult.set_position_relative(150)
-            #catapult.set_position_relative(145)
        
-            
     except BaseException:  # capture all exceptions including KeyboardInterrupt (Ctrl-C)
-        #motor.set_power(0)
         catapult.set_position(initial_position)
         BP.reset_all()
         exit()
