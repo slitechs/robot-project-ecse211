@@ -22,7 +22,7 @@ def third_bucket():
             door.set_position(initial_door_position)
             print("close door")
             time.sleep(1)
-            catapult.set_position_relative(125) #125 for 3rd,65 for 2nd, 55 for 1st
+            catapult.set_position_relative(125) #125 for 3rd,65 for 2nd, 50 for 1st
             time.sleep(1.0)
             catapult.set_position(initial_catapult_position)
             time.sleep(1) 
