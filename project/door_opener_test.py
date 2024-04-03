@@ -17,7 +17,7 @@ while True:
         time.sleep(1)
         door.set_position_relative(-45) 
         print("Open: " + str(i))
-        time.sleep(0.3) #0.35
+        time.sleep(0.45) #0.35
         door.set_position(initial_position)
         print("Close: " + str(i))
         time.sleep(2)

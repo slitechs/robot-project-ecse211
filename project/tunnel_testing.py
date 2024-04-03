@@ -28,7 +28,7 @@ def inner_tunnel():
         print("Start inner tunnel navigation")
         start_time = time()
         print("Time starts here")
-        while us_sensor_side.get_cm() is None or us_sensor_side.get_cm()<20: # edit this value to figure out when sensor is in tunnel
+        while us_sensor_side.get_cm() is None or us_sensor_side.get_cm()<15: # edit this value to figure out when sensor is in tunnel
             if us_sensor_side.get_cm() is not None and us_sensor_side.get_cm() <= 7: # edit this value to adjust tolerance
                 motorRight.set_power(-60)
                 motorLeft.set_power(-20)
@@ -52,6 +52,7 @@ def inner_tunnel():
         sleep(0.01)
         # out of the tunnel
         print("out of tunnel: go straight-ish then turn left at line")
+        print(us_sensor_side.get_cm())
         # used for left tunnel: make it go a bit more forward before trying to wall follow
         print("go straight")
         motorRight.set_power(-40)

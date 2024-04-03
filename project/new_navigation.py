@@ -5,6 +5,9 @@ Start: March 25, 2024
 In Progress: March 26, 2024
 In Progress: March 27, 2024
 In Progress: March 29, 2024
+IP: Apr 1, 2024
+IP: Apr 2, 2024
+IP: Apr 3, 2024
 """
 
 from utils.brick import BP, Motor, wait_ready_sensors, EV3ColorSensor
@@ -38,7 +41,8 @@ approaching_loading = False
 loading = False
 approaching_launch = False
 tunnel_right = False
-tunnel_distance = 40 # right tunnel coming back (edit)
+tunnel_distance = 45 # right tunnel coming back (edit)
+wall_following = False
 
 def navigation():
     global forwardFacing
@@ -87,6 +91,7 @@ def get_color():
     global loading
     global approaching_launch
     global tunnel_right
+    global wall_following
     if approaching_loading == False and approaching_launch == False:
         color_data_r = colorRight.get_red() # list of float values
         color_data_l = colorLeft.get_red() # list of float values
@@ -139,7 +144,7 @@ def get_color():
             # turn 180 degrees
             motorRight.set_power(60)
             motorLeft.set_power(-60)
-            sleep(0.95) # adjust this value
+            sleep(0.88) # adjust this value
             # stop
             motorRight.set_power(0)
             motorLeft.set_power(0)
@@ -167,9 +172,9 @@ def get_color():
             motorLeft.set_power(0) # stop
             motorRight.set_power(0) # stop
             sleep(0.5)
-            motorRight.set_power(60)
-            motorLeft.set_power(-60)
-            sleep(0.4) # edit this value based on robot design to do a 90 degree turn
+            motorRight.set_power(-60)
+            motorLeft.set_power(60)
+            sleep(0.43) # edit this value based on robot design to do a 90 degree turn
             # move forward to shoot
             motorLeft.set_power(-30)
             motorRight.set_power(-30)
@@ -198,6 +203,7 @@ def activate_ultrasonic():
     global approaching_launch
     global tunnel_right
     global tunnel_distance
+    global wall_following
     try:
         us_data = US_SENSOR.get_value()  # Float value in centimeters 0, capped to 255 cm
         us_side_data = us_sensor_side.get_value()
@@ -238,7 +244,7 @@ def activate_ultrasonic():
                 # check if it's actually true
                 i = 0
                 new_value = US_SENSOR.get_cm()
-                while new_value is None or (new_value is not None and i<40):
+                while new_value is None or (new_value is not None and i<75):
                     new_value = US_SENSOR.get_cm()
                     # slow down
                     motorRight.set_power(-30)
@@ -270,7 +276,15 @@ def activate_ultrasonic():
                 # TODO: don't think this is needed
                 #tunnel1 = False # reset tunnel variable
                 forwardFacing = True
-
+                # ! TODO: test this
+                print("start of out of tunnel")
+                sleep(0.1) # get entire robot body out of tunnel
+                # stop
+                motorRight.set_power(0)
+                motorLeft.set_power(0)
+                sleep(10)
+                print("end")
+                # TODO: either add more here or finish this and add color classifier
                 return
             
             # TODO: add else above to account for tunnel_right == False
@@ -307,7 +321,7 @@ def activate_ultrasonic():
                 # turn right
                 motorRight.set_power(60)
                 motorLeft.set_power(-60)
-                sleep(0.45) # edit this value based on robot design to do a 90 degree turn
+                sleep(0.43) # edit this value based on robot design to do a 90 degree turn
                 # move forwards slowly
                 motorRight.set_power(-30)
                 motorLeft.set_power(-30)
@@ -322,7 +336,7 @@ def activate_ultrasonic():
                 if red1 == False: # 1st time out of tunnel
                     dist_from_wall = us_sensor_side.get_cm()
                     print(dist_from_wall)
-                    while US_SENSOR.get_cm() is None or US_SENSOR.get_cm()>23 or US_SENSOR.get_cm()==0: # edit this value to figure out when sensor is in tunnel
+                    while US_SENSOR.get_cm() is None or US_SENSOR.get_cm()>21 or US_SENSOR.get_cm()==0: # edit this value to figure out when sensor is in tunnel
                         if us_sensor_side.get_cm()< dist_from_wall: # edit this value to adjust tolerance
                             motorRight.set_power(-40)
                             motorLeft.set_power(-30)
@@ -355,6 +369,7 @@ def activate_ultrasonic():
                     sleep(1)
                     tunnel1 = True # mark tunnel as tunnelled
                     return
+                # TODO: don't think this else is ever called
                 else: # 2nd time out of tunnel
                     tunnel1 = True # mark tunnel as tunnelled
                     # wall follow instead of straight line
@@ -421,7 +436,7 @@ def activate_ultrasonic():
                         if red1 == False:
                             dist_from_wall = us_sensor_side.get_cm()
                             print(dist_from_wall)
-                            while US_SENSOR.get_cm() is None or US_SENSOR.get_cm()>23 or US_SENSOR.get_cm()==0: # edit this value to figure out when sensor is in tunnel
+                            while US_SENSOR.get_cm() is None or US_SENSOR.get_cm()>20 or US_SENSOR.get_cm()==0: # edit this value to figure out when sensor is in tunnel
                                 if us_sensor_side.get_cm()< dist_from_wall: # edit this value to adjust tolerance
                                     motorRight.set_power(-40)
                                     motorLeft.set_power(-30)
