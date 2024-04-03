@@ -15,19 +15,19 @@ while True:
     try:
         for i in range(8):
             time.sleep(1)
-            catapult.set_position_relative(125) #125 for 3rd,80 for 2nd, 55 for 1st
+            catapult.set_position_relative(125) #125 for 3rd, 65 for 2nd, 50 for 1st
             time.sleep(1.0)
             catapult.set_position(initial_position)
             time.sleep(4)
             
         time.sleep(1)
-        catapult.set_position_relative(80) #115 for 3rd,65 for 2nd, 50 for 1st
+        catapult.set_position_relative(65) 
         time.sleep(1.0)
         catapult.set_position(initial_position)
         time.sleep(2)
         
         time.sleep(1)
-        catapult.set_position_relative(55) #115 for 3rd,65 for 2nd, 50 for 1st
+        catapult.set_position_relative(50) 
         time.sleep(1.0)
         catapult.set_position(initial_position)
         time.sleep(2)
