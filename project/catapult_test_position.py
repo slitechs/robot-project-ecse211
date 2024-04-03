@@ -1,7 +1,6 @@
 from utils.brick import Motor, TouchSensor, wait_ready_sensors, BP  
 import time
 
-#motor = Motor("A")
 catapult = Motor("B")
 door = Motor("A")
 TOUCH_SENSOR = TouchSensor(1)
