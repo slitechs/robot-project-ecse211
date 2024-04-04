@@ -40,8 +40,10 @@ def collect_color_sensor_data():
     
             if color_data_r is not None: # if None then data collection failed so ignore
                     #print("R: "+str(color_data_r))
-                    print("R: "+str(color_data_r) + " L: "+str(color_data_l))
-                    output_file.write(f"R: {color_data_r} L: {color_data_l}\n") # write color sensor reading to output file
+                    print(str(color_data_r))
+                    # print("R: "+str(color_data_r) + " L: "+str(color_data_l))
+                    #output_file.write(f"R: {color_data_r} L: {color_data_l}\n") # write color sensor reading to output file
+                    output_file.write(f"{color_data_r[0]},{color_data_r[1]},{color_data_r[2]}\n") # write color sensor reading to output file
 
             sleep(DELAY_SEC)
     except BaseException:  # capture all exceptions including KeyboardInterrupt (Ctrl-C)
