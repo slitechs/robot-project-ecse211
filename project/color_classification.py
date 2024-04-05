@@ -42,8 +42,8 @@ def classify_right(measured):
     normalized_measured = normalize(*measured)
     
     centroids = {
-        'black': [0.251, 0.43, 0.319],
-        'blue': [0.309, 0.421, 0.272],
+        'black': [0.286, 0.453, 0.259],
+        'blue': [0.301, 0.425, 0.270],
         'red': [0.766, 0.153, 0.08]
     }
     
