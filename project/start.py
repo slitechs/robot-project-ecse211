@@ -9,7 +9,7 @@ from utils.brick import reset_brick, Motor
 from utils.brick import wait_ready_sensors, EV3ColorSensor, TouchSensor, EV3UltrasonicSensor
 from time import sleep
 # function imports
-from navigation import navigation
+from project.newest_navigation import navigation
 
 print("Start of program start.py.\nWaiting for sensors to turn on...")
 

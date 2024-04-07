@@ -47,7 +47,7 @@ def inner_tunnel():
             end_time = time()
             elapsed_time = end_time-start_time
             print(elapsed_time)
-            if (elapsed_time > 6):
+            if (elapsed_time > 5.2):
                 break # get out of while loop
         sleep(0.01)
         # out of the tunnel
