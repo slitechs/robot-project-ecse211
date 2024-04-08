@@ -16,13 +16,11 @@ def third_bucket():
     try: 
         for i in range(8): 
             time.sleep(1)
-            door.set_position_relative(-45)
-            print("open door")
-            time.sleep(0.40)
+            door.set_position_relative(-60)
+            time.sleep(0.50)
             door.set_position(initial_door_position)
-            print("close door")
             time.sleep(1)
-            catapult.set_position_relative(125) #125 for 3rd,65 for 2nd, 50 for 1st
+            catapult.set_position_relative(80) #80 for 3rd,65 for 2nd, 50 for 1st
             time.sleep(1.0)
             catapult.set_position(initial_catapult_position)
             time.sleep(1) 
@@ -37,11 +35,9 @@ def third_bucket():
 def second_bucket():
     try:
         time.sleep(1)
-        door.set_position_relative(-45)
-        print("open door")
-        time.sleep(0.40)
+        door.set_position_relative(-60)
+        time.sleep(0.50)
         door.set_position(initial_door_position)
-        print("close door")
         time.sleep(1)
         catapult.set_position_relative(65) 
         time.sleep(1.0)
@@ -58,11 +54,9 @@ def second_bucket():
 def first_bucket():
     try:
         time.sleep(1)
-        door.set_position_relative(-45)
-        print("open door")
-        time.sleep(0.40)
+        door.set_position_relative(-60)
+        time.sleep(0.50)
         door.set_position(initial_door_position)
-        print("close door")
         time.sleep(1)
         catapult.set_position_relative(50) 
         time.sleep(1.0)
