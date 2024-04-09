@@ -17,20 +17,51 @@ print(initial_catapult_position)
 
 def third_bucket():
     try:
-        for i in range(4): 
+        """for i in range(3): 
             for i in range(2): 
                 time.sleep(1)
                 door.set_position_relative(-60)
                 time.sleep(0.65)
                 door.set_position(initial_door_position)
                 time.sleep(1)
-                catapult.set_position_relative(90) #80 for 3rd,65 for 2nd, 50 for 1st
+                catapult.set_position_relative(90) #90 for 3rd,65 for 2nd, 50 for 1st
                 time.sleep(1.0)
                 catapult.set_position(initial_catapult_position)
                 time.sleep(1)
             motorRight.set_power(-10)
             motorLeft.set_power(10)
             time.sleep(0.2)
+            motorRight.set_power(0)
+            motorLeft.set_power(0)
+            
+        for i in range(2):
+            time.sleep(1)
+            door.set_position_relative(-60)
+            time.sleep(0.65)
+            door.set_position(initial_door_position)
+            time.sleep(1)
+            catapult.set_position_relative(90) #90 for 3rd,65 for 2nd, 50 for 1st
+            time.sleep(1.0)
+            catapult.set_position(initial_catapult_position)
+            time.sleep(1)
+            motorRight.set_power(-10)
+            motorLeft.set_power(10)
+            time.sleep(0.25)
+            motorRight.set_power(0)
+            motorLeft.set_power(0)"""
+        for i in range(10):
+            time.sleep(1)
+            door.set_position_relative(-60)
+            time.sleep(0.65)
+            door.set_position(initial_door_position)
+            time.sleep(1)
+            catapult.set_position_relative(90) #90 for 3rd,65 for 2nd, 50 for 1st
+            time.sleep(1.0)
+            catapult.set_position(initial_catapult_position)
+            time.sleep(1)
+            motorRight.set_power(-10)
+            motorLeft.set_power(10)
+            time.sleep(0.15)
             motorRight.set_power(0)
             motorLeft.set_power(0)
 
@@ -48,7 +79,7 @@ def second_bucket():
         time.sleep(0.65)
         door.set_position(initial_door_position)
         time.sleep(1)
-        catapult.set_position_relative(75) 
+        catapult.set_position_relative(69) 
         time.sleep(1.0)
         catapult.set_position(initial_catapult_position)
         time.sleep(1) 
@@ -67,7 +98,7 @@ def first_bucket():
         time.sleep(0.65)
         door.set_position(initial_door_position)
         time.sleep(1)
-        catapult.set_position_relative(50) 
+        catapult.set_position_relative(53) 
         time.sleep(1.0)
         catapult.set_position(initial_catapult_position)
         time.sleep(1) 
@@ -80,8 +111,8 @@ def first_bucket():
         exit()
 
 if __name__ == "__main__": 
-    first_bucket()
-    second_bucket()
+    #first_bucket()
+    #second_bucket()
     third_bucket()
 
     

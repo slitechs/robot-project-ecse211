@@ -48,7 +48,7 @@ def inner_tunnel():
                     motorRight.set_power(-50)
                     motorLeft.set_power(-20)
                     sleep(0.01)
-                elif side_sensor_value is not None and side_sensor_value >=9: # edit this value to adjust tolerance
+                elif side_sensor_value is not None and side_sensor_value >=8: # edit this value to adjust tolerance
                     print("adjust to move right")
                     motorRight.set_power(-20)
                     motorLeft.set_power(-50)

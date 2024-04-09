@@ -94,7 +94,7 @@ def approaching():
             sleep(0.1)
             motorRight.set_power(60)
             motorLeft.set_power(-60)
-            sleep(0.55) # edit this value based on robot design to do a 90 degree turn
+            sleep(0.51) # edit this value based on robot design to do a 90 degree turn, initially=0.55
             motorLeft.set_power(0) # stop
             motorRight.set_power(0) # stop
             sleep(1)
