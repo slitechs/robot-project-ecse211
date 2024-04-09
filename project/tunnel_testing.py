@@ -61,7 +61,7 @@ def inner_tunnel():
             end_time = time()
             elapsed_time = end_time-start_time
             print(elapsed_time)
-            if (elapsed_time > 5):
+            if (elapsed_time > 5.5):
                 break # get out of while loop
             side_sensor_value = us_sensor_side.get_cm()
             sleep(0.01)

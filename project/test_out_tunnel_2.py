@@ -74,19 +74,48 @@ def inner_tunnel():
         motorRight.set_power(-40)
         motorLeft.set_power(-40)
         sleep(0.5)
+        # here the return occurs
+        sleep(1)
         print("L tunnel out")
-        # tilt
         motorRight.set_power(-30)
-        motorLeft.set_power (0)
-        sleep(0.8)
+        motorLeft.set_power(0)
+        sleep(0.5)
+        front_dist_l_tunnel_out = us_sensor_front.get_cm()
+        print(front_dist_l_tunnel_out)
+        # tilt
+        while True:
+            front_dist_l_tunnel_out = us_sensor_front.get_cm()
+            print(front_dist_l_tunnel_out)
+            if front_dist_l_tunnel_out is None:
+                # stop
+                motorRight.set_power(0)
+                motorLeft.set_power (0)
+                sleep(0.1)
+                continue
+            elif front_dist_l_tunnel_out > 35:
+                motorRight.set_power(-30)
+                motorLeft.set_power (0)
+                sleep(0.01)
+            else:
+                # stop
+                motorRight.set_power(0)
+                motorLeft.set_power (0)
+                sleep(0.1)
+                break
         # stop
         motorRight.set_power(0)
         motorLeft.set_power (0)
         sleep(0.3)
+        print("front dist: "+str(us_sensor_front.get_cm()))
+        # tilt left
+        motorRight.set_power(0)
+        motorLeft.set_power (-30)
+        sleep(1.3)
+        print("done adjusting")
         # straight
         motorRight.set_power(-30)
-        motorLeft.set_power(-45)
-        sleep(0.5)
+        motorLeft.set_power(-30)
+        sleep(5)
     except BaseException:
         motorRight.set_power(0)
         motorLeft.set_power(0)
@@ -96,6 +125,8 @@ def inner_tunnel():
         
     finally:
         print("Done inner_tunnel")
+        reset_brick() # Turn off everything on the brick's hardware, and reset it
+        exit()
 
 '''
 Code to detect if tunnel is blocked 
