@@ -2,8 +2,11 @@ from utils.brick import Motor, wait_ready_sensors, BP
 import time
 import threading
 
+
 catapult = Motor("B")
-door = Motor("A") 
+door = Motor("A")
+motorRight = Motor("C")
+motorLeft = Motor("D")
 wait_ready_sensors()
 print("Ready")
 
@@ -13,17 +16,23 @@ initial_catapult_position = catapult.get_position()
 print(initial_catapult_position)
 
 def third_bucket():
-    try: 
-        for i in range(8): 
-            time.sleep(1)
-            door.set_position_relative(-65)
-            time.sleep(0.55)
-            door.set_position(initial_door_position)
-            time.sleep(1)
-            catapult.set_position_relative(85) #80 for 3rd,65 for 2nd, 50 for 1st
-            time.sleep(1.0)
-            catapult.set_position(initial_catapult_position)
-            time.sleep(1) 
+    try:
+        for i in range(4): 
+            for i in range(2): 
+                time.sleep(1)
+                door.set_position_relative(-60)
+                time.sleep(0.60)
+                door.set_position(initial_door_position)
+                time.sleep(1)
+                catapult.set_position_relative(95) #80 for 3rd,65 for 2nd, 50 for 1st
+                time.sleep(1.0)
+                catapult.set_position(initial_catapult_position)
+                time.sleep(1)
+            motorRight.set_power(-10)
+            motorLeft.set_power(10)
+            time.sleep(0.25)
+            motorRight.set_power(0)
+            motorLeft.set_power(0)
 
     except BaseException:  # capture all exceptions including KeyboardInterrupt (Ctrl-C)
         #motor.set_power(0)
@@ -35,11 +44,11 @@ def third_bucket():
 def second_bucket():
     try:
         time.sleep(1)
-        door.set_position_relative(-65)
-        time.sleep(0.55)
+        door.set_position_relative(-55)
+        time.sleep(0.60)
         door.set_position(initial_door_position)
         time.sleep(1)
-        catapult.set_position_relative(65) 
+        catapult.set_position_relative(75) 
         time.sleep(1.0)
         catapult.set_position(initial_catapult_position)
         time.sleep(1) 
@@ -54,11 +63,11 @@ def second_bucket():
 def first_bucket():
     try:
         time.sleep(1)
-        door.set_position_relative(-65)
-        time.sleep(0.55)
+        door.set_position_relative(-55)
+        time.sleep(0.60)
         door.set_position(initial_door_position)
         time.sleep(1)
-        catapult.set_position_relative(53) 
+        catapult.set_position_relative(60) 
         time.sleep(1.0)
         catapult.set_position(initial_catapult_position)
         time.sleep(1) 
