@@ -46,12 +46,12 @@ wall_following = False
 red_launch = False
 approached = False
 at_tunnels = False
-
+tunnel_2_entering = False
+# Polling-based navigation
 def navigation():
     global forwardFacing
     try:
         print("Start navigation")
-        
         while True:
             activate_ultrasonic()
             sleep(DELAY_SEC)
@@ -65,7 +65,7 @@ def navigation():
         print("Done navigation")
         reset_brick() # Turn off everything on the brick's hardware, and reset it
         exit()
-# Red detection w/o classification
+# Red detection with get_red()
 def red_detected(r_rgb_data, l_rgb_data):
     # TODO: change this to red color classification case
     if r_rgb_data[0] > r_rgb_data[1] and l_rgb_data[0] > l_rgb_data[2] and l_rgb_data[0] > l_rgb_data[1] and l_rgb_data[0] > l_rgb_data[2]:
@@ -100,8 +100,8 @@ def get_color():
     if ((color_data_l is not None and color_data_r is not None) or (color_data_l_rgb is not None and color_data_r_rgb is not None)) and forwardFacing == True: # if None then data collection failed so ignore
         # * For testing purposes:
         #print("R: "+str(color_data_r) + " L: "+str(color_data_l))
-        print(motorRight.get_power())
-        print(motorLeft.get_power())
+        #print(motorRight.get_power())
+        #print(motorLeft.get_power())
         # STRAIGHT-LINE MOVEMENT FORWARDS
         # Check if get_red is used
         if color_data_r is not None and color_data_l is not None:
@@ -109,23 +109,23 @@ def get_color():
                 # if right side sees black line, lessen right motor power
                 motorRight.set_power(-20)
                 motorLeft.set_power(-70)
-                print("color-right")
+                #print("color-right")
                 sleep(0.01)
             elif approaching_loading == False and color_data_l + 20< color_data_r and backward == False:
                 # if left side sees black line, lessen left motor power
                 motorRight.set_power(-70)
                 motorLeft.set_power(-20)
-                print("color-left")
+                #print("color-left")
                 sleep(0.01)
             elif approaching_loading == False and backward == False:
                 motorRight.set_power(-40)
                 motorLeft.set_power(-40)
-                print("color-both")
+                #print("color-both")
                 sleep(0.01)
             elif approaching_loading == False and backward == True:
                 motorRight.set_power(30)
                 motorLeft.set_power(30)
-                print("color-both")
+                #print("color-both")
                 sleep(0.01)
         if color_data_l_rgb is not None and color_data_r_rgb is not None:
             # RED DETECTION
@@ -165,15 +165,20 @@ def get_color():
             # Third time detecting red (before launching)
             elif approaching_launch == True and red_detected(color_data_r_rgb, color_data_l_rgb) == True and red_launch == True and red1 == True and red2 == True and red3 == False:
                 print("red3 detected")
-                # make it go a bit farther before turning
-                sleep(0.5)
                 # turn 90 degrees right
                 motorLeft.set_power(0) # stop
                 motorRight.set_power(0) # stop
                 sleep(0.5)
+                # move slighly forwards
+                motorLeft.set_power(-30)
+                motorRight.set_power(-30)
+                sleep(1)
+                motorLeft.set_power(0) # stop
+                motorRight.set_power(0) # stop
+                sleep(0.1)
                 motorRight.set_power(60)
                 motorLeft.set_power(-60)
-                sleep(0.4) # edit this value based on robot design to do a 90 degree turn
+                sleep(0.44) # edit this value based on robot design to do a 90 degree turn
                 motorLeft.set_power(0) # stop
                 motorRight.set_power(0) # stop
                 sleep(1)
@@ -200,18 +205,18 @@ def get_color():
                 # if only right side sees black line, lessen right motor power
                 motorRight.set_power(-20)
                 motorLeft.set_power(-70)
-                print("color-right")
+                print("rgb-right")
                 sleep(0.01)
             elif approaching_loading == False and classify_right(color_data_r_rgb) == "blue" and classify_left(color_data_l_rgb) == "black" and backward == False:
                 # if only left side sees black line, lessen left motor power
                 motorRight.set_power(-70)
                 motorLeft.set_power(-20)
-                print("color-left")
+                print("rgb-left")
                 sleep(0.01)
             elif approaching_loading == False and backward == False:
-                motorRight.set_power(-40)
-                motorLeft.set_power(-40)
-                print("color-both")
+                motorRight.set_power(-30)
+                motorLeft.set_power(-30)
+                print("rgb-both")
                 sleep(0.01)
 # Polls ultrasonic sensor data
 def activate_ultrasonic():
@@ -229,6 +234,7 @@ def activate_ultrasonic():
     global wall_following
     global approached
     global at_tunnels
+    global tunnel_2_entering
     # Get data
     us_data = US_SENSOR.get_value()  # Float value in centimeters 0, capped to 255 cm
     us_side_data = us_sensor_side.get_value()
@@ -236,7 +242,7 @@ def activate_ultrasonic():
     if us_data is not None and us_side_data is not None:
         # * For debugging
         # print("Front: "+str(us_data))
-        # print("Side: "+str(us_side_data))
+        #print("Side: "+str(us_side_data))
         # LOADING
         # In position to load
         if loading == True and red1 == True and red2 == True and red3 == False:
@@ -270,12 +276,14 @@ def activate_ultrasonic():
             check_if_at_load = US_SENSOR.get_cm()
             # check if it's actually true
             loop_index_load = 0
-            while (check_if_at_load is None and loop_index_load < 5):
-                if check_if_at_load > 18:
+            while loop_index_load < 5:
+                if check_if_at_load is None:
+                    continue
+                elif check_if_at_load > 18:
                     return
                 # verify value
                 check_if_at_load = US_SENSOR.get_cm()
-                sleep(0.5)
+                sleep(0.1)
                 print(check_if_at_load)
                 loop_index_load += 1
             # stop
@@ -294,7 +302,7 @@ def activate_ultrasonic():
             return
         # ROUTE PT 2 - TUNNEL ENTERING
         # turn right to face tunnels (tunnel to go through is saved from 1st time)
-        if forwardFacing == True and backward == True and us_data >= tunnel_distance and tunnel1 == True and red1 == True and red2 == True and us_data != 0:
+        if forwardFacing == True and tunnel_2_entering == True and us_data <= (tunnel_distance + 1) and us_data >= (tunnel_distance - 1) and tunnel1 == True and red1 == True and red2 == True and us_data != 0:
             # stop and turn right to face tunnel
             motorLeft.set_power(0) # stop
             motorRight.set_power(0) # stop
@@ -304,12 +312,12 @@ def activate_ultrasonic():
                 # right turn angle for left tunnel
                 motorRight.set_power(60)
                 motorLeft.set_power(-60)
-                sleep(0.39) # edit this value based on robot design to do a 90 degree turn right
+                sleep(0.398) # edit this value based on robot design to do a 90 degree turn right
             else:
                 # right turn angle for right tunnel
                 motorRight.set_power(60)
                 motorLeft.set_power(-60)
-                sleep(0.45) # edit this value based on robot design to do a 90 degree turn right
+                sleep(0.44) # edit this value based on robot design to do a 90 degree turn right
             # stop
             motorLeft.set_power(0)
             motorRight.set_power(0)
@@ -322,39 +330,59 @@ def activate_ultrasonic():
             inner_tunnel()
             forwardFacing = True
             print("start of out of tunnel")
-            #sleep(0.1) # get entire robot body out of tunnel
-            # TODO: this is for testing only
             # stop
             motorRight.set_power(0)
             motorLeft.set_power(0)
             sleep(1)
-            # ! TODO: untested
             if tunnel_distance != 12:
                 print("R tunnel out")
                 motorRight.set_power(-30)
                 motorLeft.set_power(0)
-                sleep(1)
+                sleep(0.9)
                 motorRight.set_power(0)
                 motorLeft.set_power(0)
                 sleep(1)
-                while (US_SENSOR.get_cm() is None) or (US_SENSOR.get_cm() > 85):
-                    motorRight.set_power(-30)
-                    motorLeft.set_power(0)
-                    sleep(0.01)
+                print("move forwards a bit")
+                motorRight.set_power(-30)
+                motorLeft.set_power(-30)
+                sleep(1.3)
+                motorRight.set_power(0)
+                motorLeft.set_power(0)
+                sleep(1)
+                out_of_tunnel_us = US_SENSOR.get_cm()
+                while True:
+                    out_of_tunnel_us = US_SENSOR.get_cm()
+                    print(out_of_tunnel_us)
+                    if (out_of_tunnel_us is None):
+                        # stop
+                        motorRight.set_power(0)
+                        motorLeft.set_power(0)
+                        sleep(0.01)
+                        out_of_tunnel_us = US_SENSOR.get_cm()
+                        continue
+                    elif (out_of_tunnel_us < 100 and out_of_tunnel_us >= 80):
+                        # verify
+                        # stop
+                        motorRight.set_power(0)
+                        motorLeft.set_power(0)
+                        sleep(0.01)
+                        out_of_tunnel_us = US_SENSOR.get_cm()
+                        if out_of_tunnel_us < 100:
+                            break
+                    elif (out_of_tunnel_us < 80):
+                        motorRight.set_power(0)
+                        motorLeft.set_power(-30)
+                        sleep(0.01)
+                    elif (out_of_tunnel_us>=100):
+                        print("adjust")
+                        motorRight.set_power(-30)
+                        motorLeft.set_power(0)
+                        sleep(0.01)
                 # stop
                 motorRight.set_power(0)
                 motorLeft.set_power(0)
                 sleep(0.5)
                 print("done adjusting, start")
-                motorRight.set_power(-30)
-                motorLeft.set_power(-40)
-                sleep(1)
-                motorRight.set_power(0)
-                motorLeft.set_power(0)
-                sleep(1)
-                motorRight.set_power(-30)
-                motorLeft.set_power(0)
-                sleep(1)
                 motorRight.set_power(-30)
                 motorLeft.set_power(-30)
                 sleep(0.01)
@@ -362,13 +390,17 @@ def activate_ultrasonic():
                 # TODO: troubleshoot this
                 print("L tunnel out")
                 # tilt
+                motorRight.set_power(-30)
+                motorLeft.set_power (0)
+                sleep(0.8)
+                # stop
                 motorRight.set_power(0)
-                motorLeft.set_power (-30)
-                sleep(0.1) # change this to determine angle
+                motorLeft.set_power (0)
+                sleep(0.3)
                 # straight
-                motorRight.set_power(-50)
-                motorLeft.set_power(-30)
-                sleep(0.01)
+                motorRight.set_power(-30)
+                motorLeft.set_power(-45)
+                sleep(0.5)
             print("robot starts moving again")
             # let robot reposition onto line for 5 seconds
             time_start = time()
@@ -382,8 +414,9 @@ def activate_ultrasonic():
             approaching_launch = True
             print("switch to get rgb")
             tunnel2 = True
+            tunnel_2_entering = False
             return
-        if forwardFacing == True and us_data <= 12 and at_tunnels == False and tunnel2 == False and tunnel1 == True and red1 == True and red2 == True and us_data != 0:
+        if forwardFacing == True and us_data <= 14 and at_tunnels == False and tunnel2 == False and tunnel1 == True and red1 == True and red2 == True and us_data != 0:
             # stop
             motorRight.set_power(0)
             motorLeft.set_power(0)
@@ -397,7 +430,7 @@ def activate_ultrasonic():
                 print("Loop index:" + str(loop_index))
                 if check_if_at_tunnels is None or check_if_at_tunnels == 0:
                     continue
-                elif check_if_at_tunnels > 14:
+                elif check_if_at_tunnels > 15:
                     return
                 # verify value
                 check_if_at_tunnels = US_SENSOR.get_cm()
@@ -406,22 +439,42 @@ def activate_ultrasonic():
             print("at tunnels.")
             print(check_if_at_tunnels)
             if tunnel_distance > 12:
-            # move backwards
+            # move backwards slowly
                 motorRight.set_power(30)
                 motorLeft.set_power(30)
-                sleep(0.01) 
+                sleep(0.01)
+                backward = True
             else:
                 # stop
                 motorRight.set_power(0)
                 motorLeft.set_power(0)
                 sleep(0.01)
-            backward = True
+                # move forwards slowly
+                motorRight.set_power(30)
+                motorLeft.set_power(30)
+                sleep(0.01)
+            tunnel_2_entering = True
             at_tunnels = True
             return
         # ROUTE PT 1 - TUNNEL ENTERING
         # check if robot is close in front of tunnels (within 12 cm)
         if forwardFacing == True and us_data <= 14 and us_data != 0 and tunnel1 == False: # 0 was found to be a common value for noise, so need to disregard it
-            print("forward facing and tunnel detected")
+            print("forward facing and tunnel detected?")
+            # stop
+            motorRight.set_power(0)
+            motorLeft.set_power(0)
+            sleep(0.01)
+            # verify
+            v_index = 0
+            while v_index<5:
+                sleep(0.1)
+                us_data = US_SENSOR.get_cm()
+                if us_data is None:
+                    continue
+                elif us_data > 14:
+                    return
+                print(us_data)
+                v_index += 1
             # stop moving
             motorRight.set_power(0)
             motorLeft.set_power(0)
@@ -433,16 +486,17 @@ def activate_ultrasonic():
             # move forwards slowly
             motorRight.set_power(-30)
             motorLeft.set_power(-30)
-            forwardFacing = False
-            print("forwardFacing = false now")
             sleep(0.4) # edit this duration to determine how long to move forwards for when checking the first (top) tunnel 
             # stop
             motorRight.set_power(0)
             motorLeft.set_power(0)
             sleep(0.01)
+            forwardFacing = False
+            print("forwardFacing = false now")
             return     
         # Left tunnel open, detected
-        if forwardFacing == False and us_side_data > 40 and tunnel1 == False and us_side_data != 0:
+        if forwardFacing == False and us_side_data > 35 and tunnel1 == False and us_side_data != 0:
+            # TODO: verify
             print("nothing ahead detected, turn and go through tunnel")
             motorLeft.set_power(-30)
             motorRight.set_power(-30)
@@ -465,18 +519,40 @@ def activate_ultrasonic():
             # Out of tunnel
             motorRight.set_power(0)
             motorLeft.set_power(0)
-            sleep(1)
+            sleep(2)
+            # move straight
+            motorRight.set_power(-30)
+            motorLeft.set_power(-30)
+            sleep(0.5)
+            # stop
+            motorRight.set_power(0)
+            motorLeft.set_power(0)
+            sleep(2)
+            # turn kinda left
+            motorRight.set_power(-30)
+            motorLeft.set_power(0)
+            sleep(.7)
+            # stop
+            motorRight.set_power(0)
+            motorLeft.set_power(0)
+            sleep(2)
+            # TODO: move straight a bit more?
             # wall follow
+            
             dist_from_wall = us_sensor_side.get_cm()
+            '''
             print(dist_from_wall)
-            while dist_from_wall < 30:
-                print("adjust to be straight")
-                # robot is facing right
-                # turn it back straight
-                motorRight.set_power(-30)
-                motorLeft.set_power(30)
-                sleep(0.01)
+            while True:
+                if dist_from_wall < 30:
+                    print("adjust to be straight")
+                    # robot is facing right
+                    # turn it back straight
+                    motorRight.set_power(-30)
+                    motorLeft.set_power(30)
+                    sleep(0.01)
+                
                 dist_from_wall = us_sensor_side.get_cm()
+            '''
             # stop
             motorRight.set_power(0)
             motorLeft.set_power(0)
@@ -520,6 +596,18 @@ def activate_ultrasonic():
             return
         # Right tunnel open, left tunnel detected as blocked
         elif forwardFacing == False and us_side_data < 20 and tunnel1 == False: # blocked tunnel detected
+            print("blocked tunnel? verify in progress")
+            # verify
+            ver_index = 0
+            while ver_index<5:
+                sleep(0.1)
+                us_side_data = us_sensor_side.get_cm()
+                if us_side_data is None:
+                    continue
+                elif us_side_data > 20:
+                    return
+                print(us_side_data)
+                ver_index += 1
             print("blocked tunnel detected")
             # stop
             motorLeft.set_power(0)
@@ -553,8 +641,23 @@ def activate_ultrasonic():
             sleep(1)
             # wall follow
             dist_from_wall = us_sensor_side.get_cm()
+            dist_from_front = US_SENSOR.get_cm()
             print(dist_from_wall)
-            while US_SENSOR.get_cm() is None or US_SENSOR.get_cm()>20 or US_SENSOR.get_cm()==0: # edit this value to figure out when sensor is in tunnel
+            while True: # edit this value to figure out when sensor is in tunnel
+                dist_from_front = US_SENSOR.get_cm()
+                if dist_from_front is None or dist_from_front == 0:
+                    # stop
+                    motorRight.set_power(0)
+                    motorLeft.set_power(0)
+                    sleep(0.5)
+                    continue
+                elif dist_from_front<20:
+                    # stop
+                    motorRight.set_power(0)
+                    motorLeft.set_power(0)
+                    sleep(0.5)
+                    # TODO: verify
+                    break
                 if us_sensor_side.get_cm()< dist_from_wall: # edit this value to adjust tolerance
                     motorRight.set_power(-40)
                     motorLeft.set_power(-30)
@@ -580,7 +683,7 @@ def activate_ultrasonic():
             # turn left
             motorLeft.set_power(60)
             motorRight.set_power(-60)
-            sleep(0.45) # adjust this to make a 90 degree turn
+            sleep(0.44) # adjust this to make a 90 degree turn
             # move straight
             motorLeft.set_power(-40)
             motorRight.set_power(-40)

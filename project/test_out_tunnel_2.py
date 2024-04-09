@@ -73,7 +73,20 @@ def inner_tunnel():
         print("go straight")
         motorRight.set_power(-40)
         motorLeft.set_power(-40)
-        sleep(0.5)        
+        sleep(0.5)
+        print("L tunnel out")
+        # tilt
+        motorRight.set_power(-30)
+        motorLeft.set_power (0)
+        sleep(0.8)
+        # stop
+        motorRight.set_power(0)
+        motorLeft.set_power (0)
+        sleep(0.3)
+        # straight
+        motorRight.set_power(-30)
+        motorLeft.set_power(-45)
+        sleep(0.5)
     except BaseException:
         motorRight.set_power(0)
         motorLeft.set_power(0)

@@ -10,18 +10,20 @@ door = Motor("A")
 initial_position = door.get_position() #get initial position
 print("Initial Position: " + str(initial_position))
 
-i = 1 #Counter (1 to 10)
+i = 0 #Counter (1 to 10)
 
 while True:
     try:
         time.sleep(1)
-        door.set_position_relative(-45) 
+        door.set_position_relative(-65) 
         print("Open: " + str(i))
-        time.sleep(0.45) #0.35
+        time.sleep(0.55) #0.35
         door.set_position(initial_position)
         print("Close: " + str(i))
         time.sleep(2)
         i +=1
+        if i == 10:
+            break
             
     except BaseException:  # capture all exceptions including KeyboardInterrupt (Ctrl-C)
         #motor.set_power(0)
