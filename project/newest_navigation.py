@@ -187,10 +187,10 @@ def get_color():
                 sleep(0.1)
                 motorRight.set_power(60)
                 motorLeft.set_power(-60)
-                sleep(0.51) # edit this value based on robot design to do a 90 degree turn
+                sleep(0.55) # edit this value based on robot design to do a 90 degree turn
                 motorLeft.set_power(0) # stop
                 motorRight.set_power(0) # stop
-                sleep(0.5)
+                sleep(0.1)
                 # shoot balls
                 print("DONE ALL NAVIGATION")
                 # CATAPULT
@@ -296,7 +296,6 @@ def activate_ultrasonic():
             sleep(0.01)
         # Left tunnel open, detected
         elif forwardFacing == False and us_side_data > 30 and tunnel1 == False and us_side_data != 0:
-            # TODO: verify
             print("nothing ahead detected, turn and go through tunnel")
             motorLeft.set_power(-30)
             motorRight.set_power(-30)
@@ -308,7 +307,7 @@ def activate_ultrasonic():
             # turn right
             motorRight.set_power(60)
             motorLeft.set_power(-60)
-            sleep(0.5) # edit this value based on robot design to do a 90 degree turn
+            sleep(0.52) # edit this value based on robot design to do a 90 degree turn (0.5 too little, 0.55 too much)
             # move forwards slowly
             motorRight.set_power(-30)
             motorLeft.set_power(-30)
@@ -336,7 +335,6 @@ def activate_ultrasonic():
             motorRight.set_power(0)
             motorLeft.set_power(0)
             sleep(1)
-            # TODO: move straight a bit more?
             # wall follow
             dist_from_wall = us_sensor_side.get_cm()
             print(dist_from_wall)
@@ -438,7 +436,7 @@ def activate_ultrasonic():
             # turn right
             motorRight.set_power(60)
             motorLeft.set_power(-60)
-            sleep(0.47) # edit this value based on robot design to do a 90 degree turn
+            sleep(0.47) # edit this value based on robot design to do a 90 degree turn (EDITED)
             # move forwards slowly
             motorRight.set_power(-30)
             motorLeft.set_power(-30)
@@ -597,8 +595,8 @@ def activate_ultrasonic():
                 motorLeft.set_power(0)
                 sleep(0.01)
                 # move forwards slowly
-                motorRight.set_power(30)
-                motorLeft.set_power(30)
+                motorRight.set_power(-30)
+                motorLeft.set_power(-30)
                 sleep(0.01)
             tunnel_2_entering = True
             at_tunnels = True
@@ -612,14 +610,14 @@ def activate_ultrasonic():
             print("here")
             if tunnel_distance == 12:
                 # right turn angle for left tunnel
-                motorRight.set_power(60)
-                motorLeft.set_power(-60)
-                sleep(0.48) # edit this value based on robot design to do a 90 degree turn right (.475 not enough,.49 too much)
+                motorRight.set_power(50)
+                motorLeft.set_power(-50)
+                sleep(.65) # edit this value based on robot design to do a 90 degree turn right (.475 not enough,.476 too much,.48 too much)
             else:
                 # right turn angle for right tunnel
-                motorRight.set_power(60)
-                motorLeft.set_power(-60)
-                sleep(0.48) # edit this value based on robot design to do a 90 degree turn right (.49 too much)
+                motorRight.set_power(50)
+                motorLeft.set_power(-50)
+                sleep(0.6) # edit this value based on robot design to do a 90 degree turn right (.49 too much, .48 barelu)
             # stop
             motorLeft.set_power(0)
             motorRight.set_power(0)
@@ -628,7 +626,7 @@ def activate_ultrasonic():
             # move forwards slowly
             motorRight.set_power(-30)
             motorLeft.set_power(-30)
-            sleep(3) # however long it might take to go thru tunnel
+            sleep(3.5) # however long it might take to go thru tunnel
             inner_tunnel()
             forwardFacing = True
             print("start of out of tunnel")
@@ -669,20 +667,20 @@ def activate_ultrasonic():
                         sleep(0.01)
                         out_of_tunnel_us = US_SENSOR.get_cm()
                         continue
-                    elif (out_of_tunnel_us < 100 and out_of_tunnel_us >= 80):
+                    elif (out_of_tunnel_us < 105 and out_of_tunnel_us >= 80):
                         # verify
                         # stop
                         motorRight.set_power(0)
                         motorLeft.set_power(0)
                         sleep(0.01)
                         out_of_tunnel_us = US_SENSOR.get_cm()
-                        if out_of_tunnel_us < 100:
+                        if out_of_tunnel_us < 105:
                             break
                     elif (out_of_tunnel_us < 80):
                         motorRight.set_power(0)
                         motorLeft.set_power(-30)
                         sleep(0.01)
-                    elif (out_of_tunnel_us>=100):
+                    elif (out_of_tunnel_us>=105):
                         print("adjust")
                         motorRight.set_power(-30)
                         motorLeft.set_power(0)
@@ -702,7 +700,7 @@ def activate_ultrasonic():
                 sleep(1)
                 motorRight.set_power(-30)
                 motorLeft.set_power(0)
-                sleep(0.5)
+                sleep(0.3)
                 front_dist_l_tunnel_out = US_SENSOR.get_cm()
                 print(front_dist_l_tunnel_out)
                 # tilt
@@ -715,7 +713,7 @@ def activate_ultrasonic():
                         motorLeft.set_power (0)
                         sleep(0.1)
                         continue
-                    elif front_dist_l_tunnel_out > 35:
+                    elif front_dist_l_tunnel_out > 40:
                         motorRight.set_power(-30)
                         motorLeft.set_power (0)
                         sleep(0.01)
@@ -733,7 +731,7 @@ def activate_ultrasonic():
                 # tilt
                 motorRight.set_power(0)
                 motorLeft.set_power (-30)
-                sleep(1.8) #1.5 is too little, 1.7 looked like it barely worked, 1.8 didn't catch the line but eventually readjusted (on side close to door)
+                sleep(1.77) #1.5 is too little, 1.7 looked like it barely worked, 1.8 too much
                 print("done adjusting")
                 # straight
                 motorRight.set_power(-30)

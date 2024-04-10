@@ -97,7 +97,7 @@ def approaching():
             sleep(0.51) # edit this value based on robot design to do a 90 degree turn, initially=0.55
             motorLeft.set_power(0) # stop
             motorRight.set_power(0) # stop
-            sleep(1)
+            sleep(.5)
             # shoot balls
             print("DONE ALL NAVIGATION")
             # CATAPULT

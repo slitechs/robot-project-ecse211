@@ -2,6 +2,8 @@ from utils.brick import Motor, wait_ready_sensors, BP
 import time
 import threading
 
+#Battery 31 (maybe?): 90 for 3rd,69 for 2nd, 53 for 1st
+#Battery 32: 
 
 catapult = Motor("B")
 door = Motor("A")
@@ -55,13 +57,13 @@ def third_bucket():
             time.sleep(0.65)
             door.set_position(initial_door_position)
             time.sleep(1)
-            catapult.set_position_relative(90) #90 for 3rd,65 for 2nd, 50 for 1st
+            catapult.set_position_relative(94) 
             time.sleep(1.0)
             catapult.set_position(initial_catapult_position)
             time.sleep(1)
             motorRight.set_power(-10)
             motorLeft.set_power(10)
-            time.sleep(0.15)
+            time.sleep(0.12)
             motorRight.set_power(0)
             motorLeft.set_power(0)
 
@@ -79,7 +81,7 @@ def second_bucket():
         time.sleep(0.65)
         door.set_position(initial_door_position)
         time.sleep(1)
-        catapult.set_position_relative(69) 
+        catapult.set_position_relative(70) 
         time.sleep(1.0)
         catapult.set_position(initial_catapult_position)
         time.sleep(1) 
@@ -98,7 +100,7 @@ def first_bucket():
         time.sleep(0.65)
         door.set_position(initial_door_position)
         time.sleep(1)
-        catapult.set_position_relative(53) 
+        catapult.set_position_relative(55) 
         time.sleep(1.0)
         catapult.set_position(initial_catapult_position)
         time.sleep(1) 
