@@ -9,7 +9,6 @@ motorRight = Motor("C")
 motorLeft = Motor("D")
 colorRight = EV3ColorSensor(4)
 colorLeft = EV3ColorSensor(3)
-#touch_sensor = TouchSensor(1)
 us_sensor_side = EV3UltrasonicSensor(1)
 us_sensor_front = EV3UltrasonicSensor(2)
 
