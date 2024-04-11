@@ -81,7 +81,7 @@ def second_bucket():
         time.sleep(0.65)
         door.set_position(initial_door_position)
         time.sleep(1)
-        catapult.set_position_relative(72.5)  # was 70 but too little
+        catapult.set_position_relative(73)  # was 70 but too little
         time.sleep(1.0)
         catapult.set_position(initial_catapult_position)
         time.sleep(1) 

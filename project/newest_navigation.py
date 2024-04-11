@@ -436,7 +436,7 @@ def activate_ultrasonic():
             # turn right
             motorRight.set_power(60)
             motorLeft.set_power(-60)
-            sleep(0.47) # edit this value based on robot design to do a 90 degree turn (EDITED)
+            sleep(0.47) # (0.47 close to door) edit this value based on robot design to do a 90 degree turn (EDITED)
             # move forwards slowly
             motorRight.set_power(-30)
             motorLeft.set_power(-30)
@@ -613,7 +613,7 @@ def activate_ultrasonic():
                 # right turn angle for left tunnel
                 motorRight.set_power(50)
                 motorLeft.set_power(-50)
-                sleep(.56) # (.57 too much) edit this value based on robot design to do a 90 degree turn right (.475 not enough,.476 too much,.48 too much)
+                sleep(.55) # (.55 for tunnel close to wall) (.57 too much) edit this value based on robot design to do a 90 degree turn right (.475 not enough,.476 too much,.48 too much)
             else:
                 # right turn angle for right tunnel
                 motorRight.set_power(50)
