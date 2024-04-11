@@ -187,7 +187,7 @@ def get_color():
                 sleep(0.1)
                 motorRight.set_power(60)
                 motorLeft.set_power(-60)
-                sleep(0.525) # edit this value based on robot design to do a 90 degree turn
+                sleep(0.52) # edit this value based on robot design to do a 90 degree turn
                 motorLeft.set_power(0) # stop
                 motorRight.set_power(0) # stop
                 sleep(0.1)
@@ -307,7 +307,7 @@ def activate_ultrasonic():
             # turn right
             motorRight.set_power(60)
             motorLeft.set_power(-60)
-            sleep(0.52) # edit this value based on robot design to do a 90 degree turn (0.5 too little, 0.55 too much)
+            sleep(0.5) # (0.5 close 2 door, 0.52 away) edit this value based on robot design to do a 90 degree turn (0.5 too little, 0.52 too much)
             # move forwards slowly
             motorRight.set_power(-30)
             motorLeft.set_power(-30)
@@ -613,7 +613,7 @@ def activate_ultrasonic():
                 # right turn angle for left tunnel
                 motorRight.set_power(50)
                 motorLeft.set_power(-50)
-                sleep(.57) # edit this value based on robot design to do a 90 degree turn right (.475 not enough,.476 too much,.48 too much)
+                sleep(.56) # (.57 too much) edit this value based on robot design to do a 90 degree turn right (.475 not enough,.476 too much,.48 too much)
             else:
                 # right turn angle for right tunnel
                 motorRight.set_power(50)
@@ -646,7 +646,7 @@ def activate_ultrasonic():
                 sleep(1)
                 motorRight.set_power(-30)
                 motorLeft.set_power(0)
-                sleep(0.3)
+                sleep(0.6) # (0.6 close to door)
                 motorRight.set_power(0)
                 motorLeft.set_power(0)
                 sleep(1)
@@ -732,12 +732,12 @@ def activate_ultrasonic():
                 # tilt
                 motorRight.set_power(0)
                 motorLeft.set_power (-30)
-                sleep(1.75) #1.5 is too little, 1.7 looked like it barely worked, 1.8 too much (1.77 missed the line)
+                sleep(1.7) #1.5 is too little, 1.7 looked like it barely worked, 1.8 too much (1.77 missed the line)
                 print("done adjusting")
                 # straight
                 motorRight.set_power(-30)
                 motorLeft.set_power(-30)
-                sleep(2)
+                sleep(1) # changed from 2 to 1
             print("robot starts moving again")
             # let robot reposition onto line for 5 seconds
             time_start = time()
