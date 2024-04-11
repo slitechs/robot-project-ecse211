@@ -187,7 +187,7 @@ def get_color():
                 sleep(0.1)
                 motorRight.set_power(60)
                 motorLeft.set_power(-60)
-                sleep(0.53) # edit this value based on robot design to do a 90 degree turn
+                sleep(0.525) # edit this value based on robot design to do a 90 degree turn
                 motorLeft.set_power(0) # stop
                 motorRight.set_power(0) # stop
                 sleep(0.1)
@@ -617,7 +617,7 @@ def activate_ultrasonic():
                 # right turn angle for right tunnel
                 motorRight.set_power(50)
                 motorLeft.set_power(-50)
-                sleep(0.58) # edit this value based on robot design to do a 90 degree turn right (.51 not enough, .48 barelu)
+                sleep(0.57) # edit this value based on robot design to do a 90 degree turn right (.51 not enough, .48 barelu)
             # stop
             motorLeft.set_power(0)
             motorRight.set_power(0)
