@@ -547,6 +547,7 @@ def activate_ultrasonic():
             while us_sensor_side.get_cm() is None or us_sensor_side.get_cm() > 3: # or != 255?
                 pass
             # no longer loading - update variables
+            print("signal received - begin")
             approaching_loading = False
             loading = False
             sleep(0.5)
@@ -612,7 +613,7 @@ def activate_ultrasonic():
                 # right turn angle for left tunnel
                 motorRight.set_power(50)
                 motorLeft.set_power(-50)
-                sleep(.59) # edit this value based on robot design to do a 90 degree turn right (.475 not enough,.476 too much,.48 too much)
+                sleep(.57) # edit this value based on robot design to do a 90 degree turn right (.475 not enough,.476 too much,.48 too much)
             else:
                 # right turn angle for right tunnel
                 motorRight.set_power(50)
@@ -731,7 +732,7 @@ def activate_ultrasonic():
                 # tilt
                 motorRight.set_power(0)
                 motorLeft.set_power (-30)
-                sleep(1.77) #1.5 is too little, 1.7 looked like it barely worked, 1.8 too much
+                sleep(1.75) #1.5 is too little, 1.7 looked like it barely worked, 1.8 too much (1.77 missed the line)
                 print("done adjusting")
                 # straight
                 motorRight.set_power(-30)

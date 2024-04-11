@@ -81,7 +81,7 @@ def second_bucket():
         time.sleep(0.65)
         door.set_position(initial_door_position)
         time.sleep(1)
-        catapult.set_position_relative(70) 
+        catapult.set_position_relative(75)  # was 70 but too little
         time.sleep(1.0)
         catapult.set_position(initial_catapult_position)
         time.sleep(1) 
@@ -100,7 +100,7 @@ def first_bucket():
         time.sleep(0.65)
         door.set_position(initial_door_position)
         time.sleep(1)
-        catapult.set_position_relative(55) 
+        catapult.set_position_relative(60) # was 55 but too little
         time.sleep(1.0)
         catapult.set_position(initial_catapult_position)
         time.sleep(1) 
@@ -113,8 +113,8 @@ def first_bucket():
         exit()
 
 if __name__ == "__main__": 
-    #first_bucket()
-    #second_bucket()
+    first_bucket()
+    second_bucket()
     third_bucket()
 
     
