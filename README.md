@@ -1,4 +1,4 @@
-# robot-project-ecse211
+# Autonomous Robot
 
 An autonomous robot capable of navigation with obstacle detection, and ball launching (1 ball to the closest target, 1 ball to the middle target, 8 balls to the farthest target).
 
